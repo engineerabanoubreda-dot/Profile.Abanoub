@@ -1,0 +1,11 @@
+import express from 'express';
+import cors from 'cors';
+import { env } from './config/env.js';
+import contactRoutes from './routes/contact.js';
+const app = express();
+app.use(cors({ origin: env.clientOrigin.split(',') }));
+app.use(express.json({ limit: '20kb' }));
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
+app.use('/api/contact', contactRoutes);
+app.use((_req, res) => res.status(404).json({ error: 'Not found' }));
+app.listen(env.port, () => console.log(`API listening on :${env.port}`));
